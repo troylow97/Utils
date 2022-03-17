@@ -1,12 +1,19 @@
 #include "bitset.h"
 #include  <stdexcept>
-	
+#include <ostream>
+
 namespace CustomSTL
 {
   template<size_t N>
   bitset<N>::bitset() :
     bitset_array{0}
   {}
+
+  template<size_t N>
+  bitset<N>::bitset(const bitset& rhs)
+  {
+      rhs.data = bitset_array.data;
+  }
   
   template<size_t N>
   void bitset<N>::set(size_t index,bool flag)
@@ -46,10 +53,10 @@ namespace CustomSTL
   template<size_t N>    
   bool bitset<N>::any() const noexcept
   {
-    for (size_t i = 0; i < N; ++i)
+    for (std::size_t i = 0; i < N; ++i)
     {
-      if (bitset_array(i) != 0)
-        return true;
+        if (test(i))
+            return true;
     }
 
     return false;
@@ -64,15 +71,29 @@ namespace CustomSTL
   template<size_t N>  
   bool bitset<N>::all() const noexcept
   {
-    for (size_t i = 0; i < N; ++i)
+    for (std::size_t i = 0; i < N; ++i)
     {
-      if (bitset_array(i) != 1)
-        return false;
+        if (!test(i))
+            return false;
     }
 
     return true;
-  }      
+  }
+  
+  /*************************************************************************/
+  /*!
+   Returns true if any of the bit is toggled.
+  /*************************************************************************/
+  template<size_t N>
+  bitset<N>::operator bool() const noexcept
+  {
+      return any();
+  }
 
+  /*************************************************************************/
+  /*!
+    Returns the value to the bit at position pos.
+  /*************************************************************************/
   template<size_t N>  
   bool bitset<N>::operator[](size_t index) const
   {
@@ -80,6 +101,91 @@ namespace CustomSTL
     return (bitset_array[arr_index(index)] >> shift_bits(index));    
   }
 
+  /*************************************************************************/
+  /*!
+    Returns the reference to the bit at position pos.
+  /*************************************************************************/
+  //template<size_t N>
+  //bit_proxy<N>& bitset<N>::operator[](size_t index)
+  //{
+  //    check_bound(index);
+  //    return bit_proxy(bitset_array, index);
+  //}
+
+  /*************************************************************************/
+  /*!
+   Performs the AND operation
+  /*************************************************************************/
+  //template<size_t N>
+  //bitset<N>& bitset<N>::operator&=(const bitset& rhs) noexcept
+  //{
+  //    for (size_t i = 0; i < N; ++i)
+  //    {
+  //        
+  //    }
+  //
+  //    return true;
+  //}
+
+  /*************************************************************************/
+  /*!
+   Performs the OR operation
+  /*************************************************************************/
+  //template<size_t N>
+  //bitset<N>& bitset<N>::operator|=(const bitset& rhs) noexcept
+  //{
+  //    for (size_t i = 0; i < N; ++i)
+  //    {
+  //        
+  //    }
+  //
+  //    return true;
+  //}
+
+  /*************************************************************************/
+  /*!
+   Performs the XOR operation
+  /*************************************************************************/
+  //template<size_t N>
+  //bitset<N>& bitset<N>::operator^=(const bitset& rhs) noexcept
+  //{
+  //    for (size_t i = 0; i < N; ++i)
+  //    {
+  //        
+  //    }
+  //
+  //    return true;
+  //}
+
+  /*************************************************************************/
+  /*!
+   Return a new bitset with all the bits flipped
+  /*************************************************************************/
+  template<size_t N>
+  bitset<N> bitset<N>::operator~() const noexcept
+  {
+      return bitset(*this).flip();
+  }
+
+  /*************************************************************************/
+  /*!
+   Copy assignment operator
+  /*************************************************************************/
+  template<size_t N>
+  const bitset<N>& bitset<N>::operator=(const bitset& rhs)
+  {
+      if (this != rhs)
+      {
+          rhs(*this);
+      }
+
+      return *this;
+  }
+
+  /*************************************************************************/
+  /*!
+   Returns number of toggled bit
+  /*************************************************************************/
   template<size_t N>  
   size_t bitset<N>::count() const
   {
@@ -93,7 +199,10 @@ namespace CustomSTL
     return count;
   }
   
-
+  /*************************************************************************/
+  /*!
+   Returns the maximum capactiy of the bitset
+  /*************************************************************************/
   template<size_t N>  
   constexpr size_t bitset<N>::size() const
   {
@@ -133,4 +242,5 @@ namespace CustomSTL
   {
     return (index / BITS_IN_CHAR);
   }
+
 }
