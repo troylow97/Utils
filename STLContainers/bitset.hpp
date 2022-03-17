@@ -53,7 +53,7 @@ namespace CustomSTL
   template<size_t N>    
   bool bitset<N>::any() const noexcept
   {
-    for (std::size_t i = 0; i < N; ++i)
+    for (std::size_t i = 0; i < bitset_array.size(); ++i)
     {
         if (test(i))
             return true;
@@ -71,7 +71,7 @@ namespace CustomSTL
   template<size_t N>  
   bool bitset<N>::all() const noexcept
   {
-    for (std::size_t i = 0; i < N; ++i)
+    for (std::size_t i = 0; i < bitset_array.size(); ++i)
     {
         if (!test(i))
             return false;
@@ -116,46 +116,46 @@ namespace CustomSTL
   /*!
    Performs the AND operation
   /*************************************************************************/
-  //template<size_t N>
-  //bitset<N>& bitset<N>::operator&=(const bitset& rhs) noexcept
-  //{
-  //    for (size_t i = 0; i < N; ++i)
-  //    {
-  //        
-  //    }
-  //
-  //    return true;
-  //}
+  template<size_t N>
+  bitset<N>& bitset<N>::operator&=(const bitset& rhs) noexcept
+  {
+      for (size_t i = 0; i < bitset_array.size(); ++i)
+      {
+          bitset_array[i] &= rhs.bitset_array[i];
+      }
+  
+      return *this;
+  }
 
   /*************************************************************************/
   /*!
    Performs the OR operation
   /*************************************************************************/
-  //template<size_t N>
-  //bitset<N>& bitset<N>::operator|=(const bitset& rhs) noexcept
-  //{
-  //    for (size_t i = 0; i < N; ++i)
-  //    {
-  //        
-  //    }
-  //
-  //    return true;
-  //}
+  template<size_t N>
+  bitset<N>& bitset<N>::operator|=(const bitset& rhs) noexcept
+  {
+      for (size_t i = 0; i < bitset_array.size(); ++i)
+      {
+          bitset_array[i] |= rhs.bitset_array[i];
+      }
+
+      return *this;
+  }
 
   /*************************************************************************/
   /*!
    Performs the XOR operation
   /*************************************************************************/
-  //template<size_t N>
-  //bitset<N>& bitset<N>::operator^=(const bitset& rhs) noexcept
-  //{
-  //    for (size_t i = 0; i < N; ++i)
-  //    {
-  //        
-  //    }
-  //
-  //    return true;
-  //}
+  template<size_t N>
+  bitset<N>& bitset<N>::operator^=(const bitset& rhs) noexcept
+  {
+      for (size_t i = 0; i < bitset_array.size(); ++i)
+      {
+          bitset_array[i] ^= rhs.bitset_array[i];
+      }
+
+      return *this;
+  }
 
   /*************************************************************************/
   /*!
