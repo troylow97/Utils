@@ -1,5 +1,6 @@
 #include "bitset.h"
-
+#include  <stdexcept>
+	
 namespace CustomSTL
 {
   template<size_t N>
@@ -8,45 +9,75 @@ namespace CustomSTL
   {}
   
   template<size_t N>
-  void bitset<N>::set(size_t x,bool flag)
+  void bitset<N>::set(size_t index,bool flag)
   {
-    check_bound(x);
-    if(flag == true)
-      bitset_array[arr_index(x)] = static_cast<char>(bitset_array[arr_index(x)] 
-                                   | (flag << shift_bits(x)));
+    check_bound(index);
+    if(flag)
+      bitset_array[arr_index(index)] = static_cast<char>(bitset_array[arr_index(index)] 
+                                   | (flag << shift_bits(index)));
     else
-      bitset_array[arr_index(x)] = static_cast<char>(bitset_array[arr_index(x)] 
-                                   & ~(1 << shift_bits(x)));
+      bitset_array[arr_index(index)] = static_cast<char>(bitset_array[arr_index(index)] 
+                                   & ~(1 << shift_bits(index)));
   }
 
   template<size_t N>  
-  void bitset<N>::reset(size_t x)
+  void bitset<N>::reset(size_t index)
   {
-    check_bound(x);
-    bitset_array[arr_index(x)] = static_cast<char>(bitset_array[arr_index(x)] 
-                                 & ~(1 << shift_bits(x)));
+    check_bound(index);
+    bitset_array[arr_index(index)] = static_cast<char>(bitset_array[arr_index(index)] 
+                                 & ~(1 << shift_bits(index)));
   }
 
   template<size_t N>  
-  void bitset<N>::flip(size_t x)
+  void bitset<N>::flip(size_t index)
   {
-    check_bound(x);
-    bitset_array[arr_index(x)] = static_cast<char>(bitset_array[arr_index(x)] 
-                                 ^ 1 << shift_bits(x));
+    check_bound(index);
+    bitset_array[arr_index(index)] = static_cast<char>(bitset_array[arr_index(index)] 
+                                 ^ 1 << shift_bits(index));
   }
 
   template<size_t N>  
-  bool bitset<N>::test(size_t x) const
+  bool bitset<N>::test(size_t index) const
   {
-    check_bound(x);
-    return ((bitset_array[arr_index(x)] >> shift_bits(x)) & 1);
+    check_bound(index);
+    return ((bitset_array[arr_index(index)] >> shift_bits(index)) & 1);
+  }
+
+  template<size_t N>    
+  bool bitset<N>::any() const noexcept
+  {
+    for (size_t i = 0; i < N; ++i)
+    {
+      if (bitset_array(i) != 0)
+        return true;
+    }
+
+    return false;
   }
 
   template<size_t N>  
-  bool bitset<N>::operator[](size_t x) const
+  bool bitset<N>::none() const noexcept
   {
-    check_bound(x);
-    return (bitset_array[arr_index(x)] >> shift_bits(x));    
+    return !any();
+  }
+
+  template<size_t N>  
+  bool bitset<N>::all() const noexcept
+  {
+    for (size_t i = 0; i < N; ++i)
+    {
+      if (bitset_array(i) != 1)
+        return false;
+    }
+
+    return true;
+  }      
+
+  template<size_t N>  
+  bool bitset<N>::operator[](size_t index) const
+  {
+    check_bound(index);
+    return (bitset_array[arr_index(index)] >> shift_bits(index));    
   }
 
   template<size_t N>  
@@ -69,7 +100,6 @@ namespace CustomSTL
     return N;
   }
   
-
   template<size_t N>  
   std::string bitset<N>::to_string(const char first,const char second) const
   {
@@ -86,21 +116,21 @@ namespace CustomSTL
   }
   
   template<size_t N>
-  void bitset<N>::check_bound(size_t x) const
+  void bitset<N>::check_bound(size_t index) const
   {
-    if(x > (N-1))
-      throw std::out_of_range{"out of bounds!"};
+    if(index > (N-1))
+      throw std::out_of_range{("out of bounds!")};
   }
   
   template<size_t N>
-  size_t bitset<N>::shift_bits(size_t x) const
+  size_t bitset<N>::shift_bits(size_t index) const
   {
-    return (x % BITS_IN_CHAR);
+    return (index % BITS_IN_CHAR);
   }
   
   template<size_t N>
-  size_t bitset<N>::arr_index(size_t x) const
+  size_t bitset<N>::arr_index(size_t index) const
   {
-    return (x / BITS_IN_CHAR);
+    return (index / BITS_IN_CHAR);
   }
 }
