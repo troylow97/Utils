@@ -1,0 +1,5 @@
+Add SpdLogger
+Add EventSystem?
+custom Vector class
+Templated std vector
+Custom memory allocator
